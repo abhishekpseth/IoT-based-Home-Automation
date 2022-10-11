@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+	  <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <meta name="Vikkey" content="Vivek Gupta & IoTMonk">
+	  <meta http-equiv="Access-Control-Allow-Origin" content="*">
+     
+      <!-- If you are opening this page from local machine, uncomment belwo line 
+       
+	  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script> 
+	  -->
+	 
+	 <!-- If you are opening this page from a web hosting server machine, uncomment belwo line -->
+	 
+	 <script type="text/javascript">
+		document.write([
+			"\<script src='",
+			("https:" == document.location.protocol) ? "https://" : "http://",
+			"ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js' type='text/javascript'>\<\/script>" 
+		].join(''));
+	  </script>
+	  
+
+      <title>Tritons</title>
+	 <style>
+	.center { 
+		height: 800px;
+		width: 800px;
+		background: #BBDEFB;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin-top: -300px;
+		margin-left: -400px;
+		overflow-y: scroll;
+	}
+	
+	.form{
+		padding-top: 50px;
+		padding-right: 30px;
+		padding-bottom: 50px;
+		padding-left: 30px;
+	}
+
+	.button {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin: 4px 2px;
+		-webkit-transition-duration: 0.4s; /* Safari */
+		transition-duration: 0.4s;
+		cursor: pointer;
+	}
+
+	.button1 {
+		background-color: white; 
+		color: black; 
+	}
+
+	.button1:hover {
+		background-color: #4CAF50;
+		color: white;
+	}
+
+	.button3 {
+		background-color: white; 
+		color: black; 
+	}
+
+	.button3:hover {
+		background-color: #F44336;
+		color: white;
+	}
+
+	.ip{
+		background-color: #fffff; /* Green */
+		border: none;
+		color: black;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin: 4px 2px;
+		-webkit-transition-duration: 0.4s; /* Safari */
+	}
+
+	.footer{
+		background:#64B5F6;
+		width:100%;
+		height:100px;
+		position:absolute;
+		bottom:0;
+		left:0;
+	}
+
+
+
+   /*CSS FOR RANGE SLIDER*/
+
+
+  
+  /*END CSS FOR RANGE SLIDER */
+
+	</style>
+      
+   </head>
+   <body bgcolor="#607D8B">
+   <center>
+		<h1 style="font-family: Helvetica;color: white;">Tritons Home Automation</h1>
+	</center>
+   
+   <div class="center">
+	<div align="center" class="form">
+       <form action="" method="get">
+              <button type="button" id="LED_1_AUTO" class="button button1" >LED_1_AUTO</button>
+			  <button type="button" id="LED_1_MANUAL" class="button button3"  >LED_1_MANUAL</button>
+			  <button type="button" id="LED_1_STOP" class="button button3"  onclick="document.getElementById('myImage1').src='./img/pic_bulboff.jpg'">
+			  LED_1_ STOP</button>
+			   <img id="myImage1" src="./img/pic_bulboff.jpg" style="width:100px">
+              <br>
+
+            <span id="value"></span> 
+        <input type="range" 
+               min="1"
+               max="10" 
+               step="1" 
+               oninput="DisplayChange(this.value)">   
+
+               <button type="button" id="INSERT_VALUE" class="button button3" onclick="document.getElementById('myImage1').src='./img/pic_bulbon.jpg'">INSERT_VALUE</button>
+
+			  <br><br>
+			  <button type="button" id="FAN_1_AUTO" class="button button1" >FAN_1_AUTO</button>
+			  <button type="button" id="FAN_1_MANUAL" class="button button3" >FAN_1_MANUAL</button>
+			  <button type="button" id="FAN_1_STOP" class="button button3" onclick="document.getElementById('myImage2').src='./img/fan.jpg'">FAN_1_STOP</button>
+              <img id="myImage2" src="./img/fan.jpg" style="width:100px">
+			   <br>
+            <span id="value"></span> 
+        <input type="range" 
+               min="1"
+               max="10" 
+               step="1" 
+               oninput="DisplayChange(this.value)">   
+
+               <button type="button" id="INSERT_VALUE" class="button button3" onclick="document.getElementById('myImage2').src='./img/pic_fanon.gif'" >INSERT_VALUE</button>
+              <br>
+
+			  <br><br>
+
+			  <button type="button" id="LED_2_AUTO" class="button button1" >LED_2_AUTO</button>
+			  <button type="button" id="LED_2_MANUAL" class="button button3" >LED_2_MANUAL</button>
+			  <img id="myImage3" src="./img/pic_bulboff.jpg" style="width:100px">
+              <br>
+			  <button type="button" id="LED_2_ON" class="button button3" onclick="document.getElementById('myImage3').src='./img/pic_bulbon.jpg'"  >LED_2_ON</button>
+
+			  <button type="button" id="LED_2_OFF" class="button button3" onclick="document.getElementById('myImage3').src='./img/pic_bulboff.jpg'" >LED_2_OFF</button>
+			  <br>
+        </form>
+		<br><br>
+	 </div>
+	</div>
+    </body>
+    
+	<script>
+
+		// LED 1 - AC OPERATED 
+		document.getElementById('LED_1_AUTO').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=1&status=auto";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+		document.getElementById('LED_1_MANUAL').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=1&status=manual";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+
+		document.getElementById('LED_1_STOP').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=1&status=stop";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+
+		function DisplayChange(newvalue) { 
+                document.getElementById( 
+                  "value").innerHTML = newvalue; 
+            } 
+
+         //var x = document.getElementById("value").value;
+         
+
+       /*  document.getElementById('INSERT_VALUE').addEventListener('click', function() {
+
+         	 var lat = document.getElementById("value").innerHTML;
+
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=1&value= " + lat + " ";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});   */
+
+
+		//FAN 1 
+
+		document.getElementById('FAN_1_AUTO').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=2&status=auto";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+		document.getElementById('FAN_1_MANUAL').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=2&status=manual";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+
+		document.getElementById('FAN_1_STOP').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=2&status=stop";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+
+
+		// LED 2 DC OPERATED
+
+			document.getElementById('LED_2_AUTO').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=3&status=auto";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+		document.getElementById('LED_2_MANUAL').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=3&status=manual";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+
+		document.getElementById('LED_2_ON').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=3&value=1";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+
+			document.getElementById('LED_2_OFF').addEventListener('click', function() {
+				var url = "http://localhost/Projects/webserver/api/led/update.php?id=3&value=0";
+				$.getJSON(url, function(data) {
+					console.log(data);
+				});
+		});
+		
+	</script>
+</html>
